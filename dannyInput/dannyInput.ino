@@ -7,29 +7,66 @@
 */
 
 
-int input = 0;
+#include <Servo.h>
 
+Servo myservo;
+
+int input = 10;
+
+int time = 2000;
+
+int currAngle = 10;
 
 void setup() {
+  
+  myservo.attach(9);
+  
+  myservo.write(currAngle);
+  
+  delay(time);
+  
   Serial.begin(9600);
 }
 
 void loop() {
   
-  if(Serial.available() > 0) { 
+  
+  if(Serial.available() > 0) {
     
     // get input
-    input = Serial.read();
+    input = Serial.parseInt();
     
-    // note: [0, 180], (0, 180], [0, 180) or (0, 180)
-    if(input > 1 && input < 179) {
-      Serial.println(input, DEC);
+    // note: [10, 170]
+    if(input >= 10 && input <= 170) {
+      Serial.print("Input is: ");
+      Serial.print(input);
+      Serial.println(" degrees");
+      
+      time = calcTime(currAngle);
+      
+      Serial.print("Delay is: ");
+      Serial.print(time);
+      Serial.println(" ms");
+      
+      delay(150);
+      
+      myservo.write(input);
+      currAngle = input;
+      delay(time);
+      
     } else {
       Serial.println("Cannot accept value");
     }
     
-    delay(2000);
-    
   }
   
+  
+}
+
+int calcTime(int currAngle) {
+  int result;
+ 
+  result = abs((currAngle - input) * 10);
+  
+  return result;
 }

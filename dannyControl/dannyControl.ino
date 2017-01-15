@@ -13,8 +13,8 @@
  
  // for ease, we declare and assign values for pins here
  
- // fps: force pressure sensor
- int fps = A0;
+ // fsr: force sensitive resistor
+ int fsr = A0;
  
  // the pin to be later assigned to the servo motor.
  // the library supports only two pins: 9 and 10
@@ -24,7 +24,7 @@
  Servo myservo;
  
   // the variable to store the angle of the servo
-  int angle = 0;
+  int angle = 10;
   
   // the current angle of servo
   int currAngle;
@@ -37,6 +37,15 @@
   
   // button to start sequence
   int button = 7;
+  
+  // fixed time to pause
+  int pause = 1000;
+  
+  // maximum accepted pressure without stopping
+  int light = 10;
+  
+  // fixed delay
+  int time = 170;
    
  void setup() {
    // setup code
@@ -44,7 +53,7 @@
    // attach pin to servo object
    myservo.attach(servoPin);
    
-   // set servo to starter position at 0 degrees
+   // set servo to starter position at 10 degrees
    myservo.write(angle);
    
    // delay to give enough time to complete
@@ -53,7 +62,7 @@
    // no need to pinMode analog in, it is input by defaul
    
    // the current angle
-   currAngle = 0;
+   currAngle = angle;
    
    pinMode(button, INPUT);
    
@@ -67,51 +76,49 @@
    
    int i;
    
+   currAngle = 10;
+   
    int buttonState = digitalRead(button);
    
    if(buttonState == HIGH) {
      // initialize sensorValue to find mean of measurements
      sensorValue = 0;
      
-     for(i = 0; i < accur; i++) {
-       // read input on analog pin 0
-       sensorValue += analogRead(fps)/accur;
-     }
-     
-     // print the value read
-     Serial.println(sensorValue);
-     
      // rotating according to pressure
      
      // if you are not touching anything and hand is not closed
-     if(sensorValue == 0 && currAngle < 180) { // could be sensorValue < minPressure for accuracy
+     while(sensorValue <= light && currAngle < 170) {
        
        // keep closing hand
        currAngle++;
-       myservo.write(angle);
+       myservo.write(currAngle);
        
-       // give enought time for motor
-       delay(40);
+       delay(10);
        
-     } else { // or if you are touching something
+       sensorValue = analogRead(fsr);
        
-       // pause for a second
-       delay(1000);
+       // print the value read
+       Serial.println(sensorValue);
        
-       // open hand
-       for(angle = currAngle; angle > 0; angle--) {
-         
-         // syntax: servo.write(angle). Rotate servo to the angle specified
-         myservo.write(angle);
-         
-         // delay to give servo enough time to rotate
-         delay(20);
-       }
      }
-   }
-   
+        
+     // pause for a fixed time set as variable pause
+     delay(pause);
      
+     myservo.write(10);
+     time = calcTime(currAngle);
+     delay(time);
+   }
       
+ }
+ 
+ int calcTime(int currAngle) {
+   
+   int result;
+   
+   result = (currAngle - 10) * 10;
+   
+   return result;
  }
  
  
