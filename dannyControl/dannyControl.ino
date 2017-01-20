@@ -4,7 +4,7 @@
   
   Danny's project
 
-  Controled rotation according to pressure input from fsr
+  Controlled rotation of a servo according to pressure input from an fsr
   
  */
 

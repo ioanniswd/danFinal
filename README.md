@@ -14,4 +14,6 @@ danny2buttons: One button opens hand while another closes it. #Done
 
 dannyInput: Rotation to angle given by user. #Done
 
-dannyControl: Controled rotation according to pressure from fsr. #Done
+dannyControl: Controlled rotation of a servo according to pressure input from an fsr #Done
+
+dannyControl2: Controlled rotation of 2 servos according to pressure input for 2 fsr #Not Done
