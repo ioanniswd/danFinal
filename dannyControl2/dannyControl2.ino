@@ -20,7 +20,7 @@
  // the pins to be later assigned to the servo motors.
  // the library supports only two pins: 9 and 10
  int servoPin9 = 9;
- int servoPin10 = 10
+ int servoPin10 = 10;
  
  // create servo objects from library Servo to control servo motors
  Servo myservo9;
@@ -33,8 +33,8 @@
   
   // the current angle of servo
   // we use two different variables in case the servos move independently
-  int currAngle0;
-  int currAngle1;
+  int currAngle9;
+  int currAngle10;
 
   // the variable to store the input from the fps
   double sensorValue0;
@@ -69,7 +69,7 @@
    myservo10.attach(servoPin10);
    
    // set servo to starter position at 10 degrees
-   myservo9.write();
+   myservo9.write(angle9);
    myservo10.write(angle10);
    
    // delay to give enough time to complete
@@ -101,7 +101,7 @@
    if(buttonState == HIGH) {
      // initialize sensorValue to find mean of measurements
      sensorValue0 = 0;
-     sensorValue10 = 0;
+     sensorValue1 = 0;
      
      // rotating according to pressure
      
@@ -125,7 +125,7 @@
        delay(10);
        
        sensorValue0 = analogRead(fsr0);
-       sensorValue1 - analogRead(fsr1)
+       sensorValue1 - analogRead(fsr1);
        // print the value read
        Serial.println(sensorValue0);
        Serial.println(sensorValue1);
