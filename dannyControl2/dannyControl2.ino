@@ -50,7 +50,7 @@
   int pause = 1000;
   
   // maximum accepted pressure without stopping
-  int light = 10;
+  int light = 100;
   
   // fixed delay
   int time = 170;
@@ -93,12 +93,13 @@
    
    int i;
    
-   currAngle10 = 10;
-   currAngle9 = 10;
-   
    int buttonState = digitalRead(button);
    
    if(buttonState == HIGH) {
+
+     currAngle9 = 10;
+     currAngle10 = 10;
+    
      // initialize sensorValue to find mean of measurements
      sensorValue0 = 0;
      sensorValue1 = 0;
@@ -119,16 +120,20 @@
        if(sensorValue1 <= light && currAngle10 <= closedAngle) {
          // keep closing hand
          currAngle10++;
-         myservo9.write(currAngle10);
+         myservo10.write(currAngle10);
        }
        
        delay(10);
        
        sensorValue0 = analogRead(fsr0);
-       sensorValue1 - analogRead(fsr1);
+       sensorValue1 = analogRead(fsr1);
        // print the value read
        Serial.println(sensorValue0);
        Serial.println(sensorValue1);
+
+       if(sensorValue0 > light || sensorValue1 > light || currAngle9 >= closedAngle || currAngle10 >= closedAngle) {
+        keepClosing = false;
+       }
        
      }
         
@@ -140,6 +145,7 @@
      int time9 = calcTime(currAngle9);
      int time10 = calcTime(currAngle10);
      time = (time9 > time10) ? time9 : time10;
+     keepClosing = true;
      delay(time);
    }
       
