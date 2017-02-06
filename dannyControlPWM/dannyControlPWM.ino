@@ -79,7 +79,7 @@ void loop() {
     // rotating according to pressure
 
     // if you are not touching anything and hand is not closed
-    uint16_t pulselen = SERVOMIN
+    uint16_t pulselen = SERVOMIN;
     while (sensorValue <= light && pulselen < SERVOMAX) {
 
       // keep closing hand
