@@ -26,7 +26,7 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 // have!
 #define SERVOMIN  150 // this is the 'minimum' pulse length count (out of 4096)
 #define SERVOMAX  550 // this is the 'maximum' pulse length count (out of 4096)
-
+#define TOTALSERVO 2 // the number of servos used
 
 // our servo # counter
 uint8_t servonum = 0;
@@ -56,7 +56,7 @@ void setup() {
 
   // initialize serial communication at 9600 bps(by convention)
   Serial.begin(9600);
-  
+
   pinMode(button, INPUT);
 
   pwm.begin();
@@ -75,8 +75,8 @@ void loop() {
   if (buttonState == HIGH) {
     // initialize sensorValue to find mean of measurements
     sensorValue = 0;
-
     // rotating according to pressure
+
 
     // if you are not touching anything and hand is not closed
     uint16_t pulselen = SERVOMIN;
@@ -84,9 +84,10 @@ void loop() {
 
       // keep closing hand
       pulselen++;
-      pwm.setPWM(0, 0, pulselen);
-
-      delay(1);
+      for (servonum = 0; servonum < TOTALSERVO; servonum++) {
+        pwm.setPWM(servonum, 0, pulselen);
+        
+      }
 
       sensorValue = analogRead(fsr);
 
@@ -98,8 +99,10 @@ void loop() {
     // pause for a fixed time set as variable pause
     delay(pause);
 
-    for(pulselen; pulselen > SERVOMIN; pulselen--) {
-      pwm.setPWM(0, 0, pulselen);
+    for (pulselen; pulselen > SERVOMIN; pulselen--) {
+      for (servonum = 0; servonum < TOTALSERVO; servonum++) {
+        pwm.setPWM(servonum, 0, pulselen);
+      }
     }
 
     delay(pause);
