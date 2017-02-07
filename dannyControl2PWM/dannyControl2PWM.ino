@@ -73,12 +73,17 @@ void setup() {
 
   // initialize serial communication at 9600 bps(by convention)
   Serial.begin(9600);
+
+  pwm.begin();
+
+  pwm.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
+
+  yield();
+
 }
 
 void loop() {
   // loop code here
-
-  int i;
 
   int buttonState = digitalRead(button);
 
@@ -110,15 +115,15 @@ void loop() {
         pwm.setPWM(servonum, 0, pulselen1);
       }
 
-      delay(10);
-
       sensorValue0 = analogRead(fsr0);
       sensorValue1 = analogRead(fsr1);
       // print the value read
       Serial.println(sensorValue0);
       Serial.println(sensorValue1);
 
-      if (sensorValue0 > light || sensorValue1 > light || pulselen0 >= SERVOMAX || pulselen1 >= SERVOMAX) {
+      
+      // Karnaugh!
+      if ((sensorValue0 > light && pulselen1 >= SERVOMAX) || (pulselen0 >= SERVOMAX && sensorValue1 > light) || (pulselen0 >= SERVOMAX && pulselen1 >= SERVOMAX) || (sensorValue0 > light && sensorValue1 > light) ) {
         keepClosing = false;
       }
 

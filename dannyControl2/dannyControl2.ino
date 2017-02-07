@@ -131,7 +131,7 @@
        Serial.println(sensorValue0);
        Serial.println(sensorValue1);
 
-       if(sensorValue0 > light || sensorValue1 > light || currAngle9 >= closedAngle || currAngle10 >= closedAngle) {
+       if((sensorValue0 > light && currAngle10 >= closedAngle) || (currAngle9 >= closedAngle && sensorValue1 > light) || (currAngle9 >= closedAngle && currAngle10 >= closedAngle) || (sensorValue0 > light && sensorValue1 > light) {
         keepClosing = false;
        }
        
